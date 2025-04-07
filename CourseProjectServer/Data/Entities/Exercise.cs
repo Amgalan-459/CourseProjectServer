@@ -10,10 +10,9 @@ namespace CourseProjectServer.Data.Entities {
         public int RepFact { get; set; }
         public string VideoUrl { get; set; }
         public string Description { get; set; }
-        [Required] public DateOnly Date { get; set; }
         [Required] public Workout Workout { get; set; }
 
-        public Exercise (int id, string name, int weightPlan, int repPlan, int weightFact, int repFact, string videoUrl, string description, DateOnly date, Workout workout) {
+        public Exercise (int id, string name, int weightPlan, int repPlan, int weightFact, int repFact, string videoUrl, string description, Workout workout) {
             Id = id;
             Name = name;
             WeightPlan = weightPlan;
@@ -22,7 +21,6 @@ namespace CourseProjectServer.Data.Entities {
             RepFact = repFact;
             VideoUrl = videoUrl;
             Description = description;
-            Date = date;
             Workout = workout;
         }
 

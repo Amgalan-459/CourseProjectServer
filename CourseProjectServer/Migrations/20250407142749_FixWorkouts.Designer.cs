@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CourseProjectServer.Migrations
 {
     [DbContext(typeof(CourseDbContext))]
-    [Migration("20250331132715_Initial1")]
-    partial class Initial1
+    [Migration("20250407142749_FixWorkouts")]
+    partial class FixWorkouts
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -57,9 +57,6 @@ namespace CourseProjectServer.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateOnly>("Date")
-                        .HasColumnType("date");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -164,6 +161,9 @@ namespace CourseProjectServer.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date");
 
                     b.Property<int>("TraineeId")
                         .HasColumnType("int");

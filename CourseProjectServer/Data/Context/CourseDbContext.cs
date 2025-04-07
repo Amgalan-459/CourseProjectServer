@@ -8,8 +8,12 @@ namespace CourseProjectServer.Data.Context {
         public DbSet<Trainee> Trainees { get; set; }
         public DbSet<Trainer> Trainers { get; set; }
         public DbSet<Workout> Workouts { get; set; }
+        public DbSet<ExerciseRaw> ExerciseRaws { get; set; }
 
         public CourseDbContext (DbContextOptions options) : base(options) {
+        }
+
+        public CourseDbContext () {
         }
 
         protected override void OnConfiguring (DbContextOptionsBuilder optionsBuilder) {

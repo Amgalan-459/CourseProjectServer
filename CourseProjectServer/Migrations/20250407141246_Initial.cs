@@ -71,8 +71,7 @@ namespace CourseProjectServer.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    TraineeId = table.Column<int>(type: "int", nullable: false),
-                    TrainerId = table.Column<int>(type: "int", nullable: true)
+                    TraineeId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -83,11 +82,6 @@ namespace CourseProjectServer.Migrations
                         principalTable: "Trainees",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Workouts_Trainers_TrainerId",
-                        column: x => x.TrainerId,
-                        principalTable: "Trainers",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -131,11 +125,6 @@ namespace CourseProjectServer.Migrations
                 name: "IX_Workouts_TraineeId",
                 table: "Workouts",
                 column: "TraineeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Workouts_TrainerId",
-                table: "Workouts",
-                column: "TrainerId");
         }
 
         /// <inheritdoc />

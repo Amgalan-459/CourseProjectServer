@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CourseProjectServer.Migrations
 {
     [DbContext(typeof(CourseDbContext))]
-    [Migration("20250331132224_Initial")]
+    [Migration("20250407141246_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -168,14 +168,9 @@ namespace CourseProjectServer.Migrations
                     b.Property<int>("TraineeId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TrainerId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("TraineeId");
-
-                    b.HasIndex("TrainerId");
 
                     b.ToTable("Workouts");
                 });
@@ -210,10 +205,6 @@ namespace CourseProjectServer.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CourseProjectServer.Data.Entities.Trainer", null)
-                        .WithMany("Workouts")
-                        .HasForeignKey("TrainerId");
-
                     b.Navigation("Trainee");
                 });
 
@@ -225,8 +216,6 @@ namespace CourseProjectServer.Migrations
             modelBuilder.Entity("CourseProjectServer.Data.Entities.Trainer", b =>
                 {
                     b.Navigation("Trainees");
-
-                    b.Navigation("Workouts");
                 });
 
             modelBuilder.Entity("CourseProjectServer.Data.Entities.Workout", b =>
