@@ -58,18 +58,21 @@ namespace CourseProjectServer.Controllers { //потом добавить про
         //потом добавить логгер везде
         #region Post
         internal async Task<IResult> AddTrainee (Trainee trainee) {
+            _logger.LogInformation("trainee post");
             await dbContext.Trainees.AddAsync(trainee);
             await dbContext.SaveChangesAsync();
             return TypedResults.Ok( trainee );
         }
 
         internal async Task<IResult> AddTrainer (Trainer trainer) {
+            _logger.LogInformation("trainer post");
             await dbContext.Trainers.AddAsync(trainer);
             await dbContext.SaveChangesAsync();
             return TypedResults.Ok( trainer );
         }
 
         internal async Task<IResult> AddWorkout (Workout workout) {
+            _logger.LogInformation("workout post");
             await dbContext.Workouts.AddAsync(workout);
             await dbContext.SaveChangesAsync();
             return TypedResults.Ok( workout );
@@ -79,33 +82,49 @@ namespace CourseProjectServer.Controllers { //потом добавить про
 
         #region Delete
         internal async Task<IResult> DeleteTrainee (int id) {
+            _logger.LogInformation("trainee delete");
             Trainee? trainee = await dbContext.Trainees
                 .FirstOrDefaultAsync();
-            if (trainee is null) return TypedResults.NotFound($"Trainee с ID = {id} не найден");
+            if (trainee is null) {
+                _logger.LogInformation("trainee not found");
+                return TypedResults.NotFound($"Trainee с ID = {id} не найден");
+            }
             return TypedResults.Ok( dbContext.Trainees.Remove(trainee) );
         }
 
         internal async Task<IResult> DeleteTrainer (int id) {
+            _logger.LogInformation("trainer delete");
             Trainer? trainer = await dbContext.Trainers
                 .FirstOrDefaultAsync();
-            if (trainer is null) return TypedResults.NotFound($"Trainer с ID = {id} не найден");
+            if (trainer is null) {
+                _logger.LogInformation("trainer not found");
+                return TypedResults.NotFound($"Trainer с ID = {id} не найден");
+            }
             return TypedResults.Ok( dbContext.Trainers.Remove(trainer) );
         }
 
         internal async Task<IResult> DeleteWorkout (int id) {
+            _logger.LogInformation("workout delete");
             Workout? workout = await dbContext.Workouts
                 .FirstOrDefaultAsync();
-            if (workout is null) return TypedResults.NotFound($"Workout с ID = {id} не найден");
+            if (workout is null) {
+                _logger.LogInformation("workout not found");
+                return TypedResults.NotFound($"Workout с ID = {id} не найден");
+            }
             return TypedResults.Ok (dbContext.Workouts.Remove(workout) );
         }
         #endregion
 
-
+        //проверить работает ли add как update
         #region Update
         internal async Task<IResult> UpdateTrainee (int id) {
+            _logger.LogInformation("trainee update");
             Trainee? trainee = await dbContext.Trainees
                 .FirstOrDefaultAsync();
-            if (trainee is null) return TypedResults.NotFound($"Trainee с ID = {id} не найден");
+            if (trainee is null) {
+                _logger.LogInformation("trainee not found");
+                return TypedResults.NotFound($"Trainee с ID = {id} не найден");
+            }
             return TypedResults.Ok( dbContext.Trainees.Update(trainee) );
         }
         #endregion
