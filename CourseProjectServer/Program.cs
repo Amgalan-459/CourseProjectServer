@@ -6,24 +6,34 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CourseProjectServer {
     public class Program {
-        public static void Main (string[] args) {
-            var builder = WebApplication.CreateBuilder(args);
+        public static async Task Main (string[] args) {       
+            await CreateHostBuiler(args).Build().RunAsync();
+        }
 
-            // Add services to the container.
+        public static IHostBuilder CreateHostBuiler (string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder => {
+                    webBuilder.UseKestrel();
+                    webBuilder.UseUrls("http://192.168.1.72:3000/");
+                    webBuilder.UseStartup<Startup>();
+                });
+    }
 
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-            builder.Services.AddScoped<EntetiesController>();
-            builder.Services.AddDbContext<CourseDbContext>();
+    public class Startup {
+        public void ConfigureServices (IServiceCollection services) {
+            services.AddControllers();
+            services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen();
+            services.AddScoped<EntetiesController>();
+            services.AddDbContext<CourseDbContext>();
 
-            builder.Services.AddCors();
+            services.AddCors();
+        }
 
-            var app = builder.Build();
-
+        public void Configure (IApplicationBuilder app, IWebHostEnvironment env) {
+            app.UseRouting();
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment()) {
+            if (env.IsDevelopment()) {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
@@ -37,58 +47,59 @@ namespace CourseProjectServer {
 
             app.UseAuthorization();
 
-            #region MapGet
-            app.MapGet("/api/trainee/all", (EntetiesController userController) =>
-                userController.GetAllTrainees());
-            app.MapGet("/api/trainee/{id:int}", (EntetiesController userController, int id) =>
-                userController.GetTrainee(id));
+            app.UseEndpoints(endpoints => {
 
-            app.MapGet("/api/trainer/all", (EntetiesController userController) =>
-                userController.GetAllTrainers());
-            app.MapGet("/api/trainer/{id:int}", (EntetiesController userController, int id) =>
-                userController.GetTrainer(id));
+                #region MapGet
+                endpoints.MapGet("/api/trainee/all", (EntetiesController userController) =>
+                    userController.GetAllTrainees());
+                endpoints.MapGet("/api/trainee/{id:int}", (EntetiesController userController, int id) =>
+                    userController.GetTrainee(id));
 
-            app.MapGet("/api/workout/all", (EntetiesController userController) =>
-                userController.GetAllWorkouts());
-            app.MapGet("/api/workout/{id:int}", (EntetiesController userController, int id) =>
-                userController.GetWorkout(id));
-            #endregion
+                endpoints.MapGet("/api/trainer/all", (EntetiesController userController) =>
+                    userController.GetAllTrainers());
+                endpoints.MapGet("/api/trainer/{id:int}", (EntetiesController userController, int id) =>
+                    userController.GetTrainer(id));
 
-
-            #region MapPost
-            app.MapPost("/api/trainee",
-                (EntetiesController controller, [FromBody] Trainee trainee) =>
-                    controller.AddTrainee(trainee));
-
-            app.MapPost("/api/trainer",
-                (EntetiesController controller, [FromBody] Trainer trainer) =>
-                    controller.AddTrainer(trainer));
-
-            app.MapPost("/api/workout",
-                (EntetiesController controller, [FromBody] Workout workout) =>
-                    controller.AddWorkout(workout));
-            #endregion
+                endpoints.MapGet("/api/workout/all", (EntetiesController userController) =>
+                    userController.GetAllWorkouts());
+                endpoints.MapGet("/api/workout/{id:int}", (EntetiesController userController, int id) =>
+                    userController.GetWorkout(id));
+                #endregion
 
 
-            #region MapDelete
-            app.MapDelete("/api/trainee/{id:int}",
-                (EntetiesController controller, int id) => controller.DeleteTrainee(id));
+                #region MapPost
+                endpoints.MapPost("/api/trainee",
+                    (EntetiesController controller, [FromBody] Trainee trainee) =>
+                        controller.AddTrainee(trainee));
 
-            app.MapDelete("/api/trainer/{id:int}",
-                (EntetiesController controller, int id) => controller.DeleteTrainer(id));
+                endpoints.MapPost("/api/trainer",
+                    (EntetiesController controller, [FromBody] Trainer trainer) =>
+                        controller.AddTrainer(trainer));
 
-            app.MapDelete("/api/workout/{id:int}",
-                (EntetiesController controller, int id) => controller.DeleteWorkout(id));
-            #endregion
+                endpoints.MapPost("/api/workout",
+                    (EntetiesController controller, [FromBody] Workout workout) =>
+                        controller.AddWorkout(workout));
+                #endregion
 
 
-            #region MapUpdate
-            app.MapPut("/api/trainee/{id:int}",
-                (EntetiesController controller, int id) =>
-                controller.UpdateTrainee(id));
-            #endregion
+                #region MapDelete
+                endpoints.MapDelete("/api/trainee/{id:int}",
+                    (EntetiesController controller, int id) => controller.DeleteTrainee(id));
 
-            app.Run();
+                endpoints.MapDelete("/api/trainer/{id:int}",
+                    (EntetiesController controller, int id) => controller.DeleteTrainer(id));
+
+                endpoints.MapDelete("/api/workout/{id:int}",
+                    (EntetiesController controller, int id) => controller.DeleteWorkout(id));
+                #endregion
+
+
+                #region MapUpdate
+                endpoints.MapPut("/api/trainee/{id:int}",
+                    (EntetiesController controller, int id) =>
+                    controller.UpdateTrainee(id));
+                #endregion
+            });
         }
     }
 }

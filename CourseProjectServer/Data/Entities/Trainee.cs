@@ -9,6 +9,7 @@ namespace CourseProjectServer.Data.Entities {
         public int CountOfTrainsInWeek {  get; set; }
         [Required] public Trainer Trainer { get; set; }
         [Required] public IList<Workout> Workouts { get; } = new List<Workout>();
+        //потом добавить класс TraineeInfo, где будут его данные о весе, обхвате и процентах
 
         public Trainee (int id, string name, string surname, string email, int countOfTrainsInWeek, Trainer uTrainer, IList<Workout> workouts) {
             Id = id;
