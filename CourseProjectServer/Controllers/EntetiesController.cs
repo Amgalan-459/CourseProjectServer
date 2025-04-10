@@ -35,6 +35,12 @@ namespace CourseProjectServer.Controllers { //потом добавить про
             return await dbContext.Workouts.ToArrayAsync();
         }
 
+        internal async Task<IEnumerable<ExerciseRaw>> GetAllExerciseRaw () {
+            _logger.LogInformation("exercise raw get all");
+
+            return await dbContext.ExerciseRaws.ToArrayAsync();
+        }
+
         internal async Task<Trainee> GetTrainee (int id) {
             _logger.LogInformation($"trainee get {id}");
 
@@ -53,29 +59,69 @@ namespace CourseProjectServer.Controllers { //потом добавить про
             return await dbContext.Workouts.Where(t => t.Id == id).FirstOrDefaultAsync();
         }
 
+        internal async Task<ExerciseRaw> GetExerciseRaw (int id) {
+            _logger.LogInformation($"exercise raw get {id}");
+
+            return await dbContext.ExerciseRaws.Where(t => t.Id == id).FirstOrDefaultAsync();
+        }
         #endregion
 
-        //потом добавить логгер везде
+
         #region Post
         internal async Task<IResult> AddTrainee (Trainee trainee) {
             _logger.LogInformation("trainee post");
-            await dbContext.Trainees.AddAsync(trainee);
+
+            if (dbContext.Trainees.Contains(trainee)) {
+                dbContext.Trainees.Update(trainee);
+            }
+            else {
+                await dbContext.Trainees.AddAsync(trainee);
+            }
+
             await dbContext.SaveChangesAsync();
             return TypedResults.Ok( trainee );
         }
 
         internal async Task<IResult> AddTrainer (Trainer trainer) {
             _logger.LogInformation("trainer post");
-            await dbContext.Trainers.AddAsync(trainer);
+
+            if (dbContext.Trainers.Contains(trainer)) {
+                dbContext.Trainers.Update(trainer);
+            }
+            else {
+                await dbContext.Trainers.AddAsync(trainer);
+            }
+
             await dbContext.SaveChangesAsync();
             return TypedResults.Ok( trainer );
         }
 
         internal async Task<IResult> AddWorkout (Workout workout) {
             _logger.LogInformation("workout post");
-            await dbContext.Workouts.AddAsync(workout);
+
+            if (dbContext.Workouts.Contains(workout)) {
+                dbContext.Workouts.Update(workout);
+            }
+            else {
+                await dbContext.Workouts.AddAsync(workout);
+            }
+
             await dbContext.SaveChangesAsync();
             return TypedResults.Ok( workout );
+        }
+
+        internal async Task<IResult> AddExerciseRaw (ExerciseRaw exerciseRaw) {
+            _logger.LogInformation("exercise raw post");
+
+            if (dbContext.ExerciseRaws.Contains(exerciseRaw)) {
+                dbContext.ExerciseRaws.Update(exerciseRaw);
+            }
+            else {
+                await dbContext.ExerciseRaws.AddAsync(exerciseRaw);
+            }
+
+            await dbContext.SaveChangesAsync();
+            return TypedResults.Ok(exerciseRaw);
         }
         #endregion
 
@@ -112,20 +158,6 @@ namespace CourseProjectServer.Controllers { //потом добавить про
                 return TypedResults.NotFound($"Workout с ID = {id} не найден");
             }
             return TypedResults.Ok (dbContext.Workouts.Remove(workout) );
-        }
-        #endregion
-
-        //проверить работает ли add как update
-        #region Update
-        internal async Task<IResult> UpdateTrainee (int id) {
-            _logger.LogInformation("trainee update");
-            Trainee? trainee = await dbContext.Trainees
-                .FirstOrDefaultAsync();
-            if (trainee is null) {
-                _logger.LogInformation("trainee not found");
-                return TypedResults.NotFound($"Trainee с ID = {id} не найден");
-            }
-            return TypedResults.Ok( dbContext.Trainees.Update(trainee) );
         }
         #endregion
     }

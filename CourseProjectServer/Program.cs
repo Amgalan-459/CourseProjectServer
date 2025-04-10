@@ -14,7 +14,7 @@ namespace CourseProjectServer {
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder => {
                     webBuilder.UseKestrel();
-                    webBuilder.UseUrls("http://192.168.1.72:3000/");
+                    webBuilder.UseUrls("http://192.168.1.72:5000/");
                     webBuilder.UseStartup<Startup>();
                 });
     }
@@ -91,13 +91,6 @@ namespace CourseProjectServer {
 
                 endpoints.MapDelete("/api/workout/{id:int}",
                     (EntetiesController controller, int id) => controller.DeleteWorkout(id));
-                #endregion
-
-
-                #region MapUpdate
-                endpoints.MapPut("/api/trainee/{id:int}",
-                    (EntetiesController controller, int id) =>
-                    controller.UpdateTrainee(id));
                 #endregion
             });
         }
