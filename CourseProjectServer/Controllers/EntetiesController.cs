@@ -35,10 +35,16 @@ namespace CourseProjectServer.Controllers { //потом добавить про
             return await dbContext.Workouts.ToArrayAsync();
         }
 
-        internal async Task<IEnumerable<ExerciseRaw>> GetAllExerciseRaw () {
+        internal async Task<IEnumerable<ExerciseRaw>> GetAllExerciseRaws () {
             _logger.LogInformation("exercise raw get all");
 
             return await dbContext.ExerciseRaws.ToArrayAsync();
+        }
+
+        internal async Task<IEnumerable<Exercise>> GetAllExercises () {
+            _logger.LogInformation("exercise get all");
+
+            return await dbContext.Exercises.ToArrayAsync();
         }
 
         internal async Task<Trainee> GetTrainee (int id) {
@@ -63,6 +69,11 @@ namespace CourseProjectServer.Controllers { //потом добавить про
             _logger.LogInformation($"exercise raw get {id}");
 
             return await dbContext.ExerciseRaws.Where(t => t.Id == id).FirstOrDefaultAsync();
+        }
+        internal async Task<Exercise> GetExercise (int id) {
+            _logger.LogInformation($"exercise get {id}");
+
+            return await dbContext.Exercises.Where(t => t.Id == id).FirstOrDefaultAsync();
         }
         #endregion
 
@@ -123,6 +134,20 @@ namespace CourseProjectServer.Controllers { //потом добавить про
             await dbContext.SaveChangesAsync();
             return TypedResults.Ok(exerciseRaw);
         }
+
+        internal async Task<IResult> AddExercise (Exercise exercise) {
+            _logger.LogInformation("exercise post");
+
+            if (dbContext.Exercises.Contains(exercise)) {
+                dbContext.Exercises.Update(exercise);
+            }
+            else {
+                await dbContext.Exercises.AddAsync(exercise);
+            }
+
+            await dbContext.SaveChangesAsync();
+            return TypedResults.Ok(exercise);
+        }
         #endregion
 
 
@@ -158,6 +183,28 @@ namespace CourseProjectServer.Controllers { //потом добавить про
                 return TypedResults.NotFound($"Workout с ID = {id} не найден");
             }
             return TypedResults.Ok (dbContext.Workouts.Remove(workout) );
+        }
+
+        internal async Task<IResult> DeleteExerciseRaw (int id) {
+            _logger.LogInformation("exercise raw delete");
+            ExerciseRaw? exerciseRaw = await dbContext.ExerciseRaws
+                .FirstOrDefaultAsync();
+            if (exerciseRaw is null) {
+                _logger.LogInformation("exercise raw not found");
+                return TypedResults.NotFound($"Exercise raw с ID = {id} не найден");
+            }
+            return TypedResults.Ok(dbContext.ExerciseRaws.Remove(exerciseRaw));
+        }
+
+        internal async Task<IResult> DeleteExercise (int id) {
+            _logger.LogInformation("exercise delete");
+            Exercise? exercise = await dbContext.Exercises
+                .FirstOrDefaultAsync();
+            if (exercise is null) {
+                _logger.LogInformation("exercise not found");
+                return TypedResults.NotFound($"Exercise с ID = {id} не найден");
+            }
+            return TypedResults.Ok(dbContext.Exercises.Remove(exercise));
         }
         #endregion
     }
