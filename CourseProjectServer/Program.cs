@@ -50,20 +50,26 @@ namespace CourseProjectServer {
             app.UseEndpoints(endpoints => {
 
                 #region MapGet
-                endpoints.MapGet("/api/trainee/all", (EntetiesController userController) =>
-                    userController.GetAllTrainees());
-                endpoints.MapGet("/api/trainee/{id:int}", (EntetiesController userController, int id) =>
-                    userController.GetTrainee(id));
+                endpoints.MapGet("/api/trainee/all", (EntetiesController controller) =>
+                    controller.GetAllTrainees());
+                endpoints.MapGet("/api/trainee/{id:int}", (EntetiesController controller, int id) =>
+                    controller.GetTrainee(id));
 
-                endpoints.MapGet("/api/trainer/all", (EntetiesController userController) =>
-                    userController.GetAllTrainers());
-                endpoints.MapGet("/api/trainer/{id:int}", (EntetiesController userController, int id) =>
-                    userController.GetTrainer(id));
+                //потом смотрим от кого. Если от тренера или админа - пароль надо, а если нет, то нет
+                endpoints.MapGet("/api/trainer/all", (EntetiesController controller) =>
+                    controller.GetAllTrainers());
+                endpoints.MapGet("/api/trainer/{id:int}", (EntetiesController controller, int id) =>
+                    controller.GetTrainer(id));
 
-                endpoints.MapGet("/api/workout/all", (EntetiesController userController) =>
-                    userController.GetAllWorkouts());
-                endpoints.MapGet("/api/workout/{id:int}", (EntetiesController userController, int id) =>
-                    userController.GetWorkout(id));
+                endpoints.MapGet("/api/workout/all", (EntetiesController controller) =>
+                    controller.GetAllWorkouts());
+                endpoints.MapGet("/api/workout/{id:int}", (EntetiesController controller, int id) =>
+                    controller.GetWorkout(id));
+
+                endpoints.MapGet("/api/exerciseraw/all", (EntetiesController controller) =>
+                    controller.GetAllExerciseRaws());
+                endpoints.MapGet("/api/exerciseraw/{id:int}", (EntetiesController controller, int id) =>
+                    controller.GetExerciseRaw(id));
                 #endregion
 
 

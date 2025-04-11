@@ -10,9 +10,10 @@ namespace CourseProjectServer.Data.Entities {
         public int[] RepFact { get; set; }
         public string VideoUrl { get; set; }
         public string Description { get; set; }
+        [Required] public int WorkoutId {  get; set; }
         [Required] public Workout Workout { get; set; }
 
-        public Exercise (int id, string name, int[] weightPlan, int[] repPlan, int[] weightFact, int[] repFact, string videoUrl, string description, Workout workout) {
+        public Exercise (int id, string name, int[] weightPlan, int[] repPlan, int[] weightFact, int[] repFact, string videoUrl, string description, int workoutId, Workout workout) {
             Id = id;
             Name = name;
             WeightPlan = weightPlan;
@@ -21,6 +22,7 @@ namespace CourseProjectServer.Data.Entities {
             RepFact = repFact;
             VideoUrl = videoUrl;
             Description = description;
+            WorkoutId = workoutId;
             Workout = workout;
         }
 
