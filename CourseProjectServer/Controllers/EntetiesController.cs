@@ -181,68 +181,86 @@ namespace CourseProjectServer.Controllers { //потом добавить про
         #region Delete
         internal async Task<IResult> DeleteTrainee (int id) {
             _logger.LogInformation("trainee delete");
-            Trainee? trainee = await dbContext.Trainees
+            Trainee? trainee = await dbContext.Trainees.Where(t => t.Id == id)
                 .FirstOrDefaultAsync();
             if (trainee is null) {
                 _logger.LogInformation("trainee not found");
                 return TypedResults.NotFound($"Trainee с ID = {id} не найден");
             }
-            return TypedResults.Ok( dbContext.Trainees.Remove(trainee) );
+            dbContext.Trainees.Remove(trainee);
+
+            await dbContext.SaveChangesAsync();
+            return TypedResults.Ok();
         }
 
         internal async Task<IResult> DeleteTrainer (int id) {
             _logger.LogInformation("trainer delete");
-            Trainer? trainer = await dbContext.Trainers
+            Trainer? trainer = await dbContext.Trainers.Where(t => t.Id == id)
                 .FirstOrDefaultAsync();
             if (trainer is null) {
                 _logger.LogInformation("trainer not found");
                 return TypedResults.NotFound($"Trainer с ID = {id} не найден");
             }
-            return TypedResults.Ok( dbContext.Trainers.Remove(trainer) );
+            dbContext.Trainers.Remove(trainer);
+
+            await dbContext.SaveChangesAsync();
+            return TypedResults.Ok();
         }
 
         internal async Task<IResult> DeleteWorkout (int id) {
             _logger.LogInformation("workout delete");
-            Workout? workout = await dbContext.Workouts
+            Workout? workout = await dbContext.Workouts.Where(w => w.Id == id)
                 .FirstOrDefaultAsync();
             if (workout is null) {
                 _logger.LogInformation("workout not found");
                 return TypedResults.NotFound($"Workout с ID = {id} не найден");
             }
-            return TypedResults.Ok (dbContext.Workouts.Remove(workout) );
+            dbContext.Workouts.Remove(workout);
+
+            await dbContext.SaveChangesAsync();
+            return TypedResults.Ok ();
         }
 
         internal async Task<IResult> DeleteExerciseRaw (int id) {
             _logger.LogInformation("exercise raw delete");
-            ExerciseRaw? exerciseRaw = await dbContext.ExerciseRaws
+            ExerciseRaw? exerciseRaw = await dbContext.ExerciseRaws.Where(e => e.Id == id)
                 .FirstOrDefaultAsync();
             if (exerciseRaw is null) {
                 _logger.LogInformation("exercise raw not found");
                 return TypedResults.NotFound($"Exercise raw с ID = {id} не найден");
             }
-            return TypedResults.Ok(dbContext.ExerciseRaws.Remove(exerciseRaw));
+            dbContext.ExerciseRaws.Remove(exerciseRaw);
+
+            await dbContext.SaveChangesAsync();
+            return TypedResults.Ok();
         }
 
         internal async Task<IResult> DeleteExercise (int id) {
             _logger.LogInformation("exercise delete");
-            Exercise? exercise = await dbContext.Exercises
+            Exercise? exercise = await dbContext.Exercises.Where(e => e.Id == id)
                 .FirstOrDefaultAsync();
             if (exercise is null) {
                 _logger.LogInformation("exercise not found");
                 return TypedResults.NotFound($"Exercise с ID = {id} не найден");
             }
-            return TypedResults.Ok(dbContext.Exercises.Remove(exercise));
+            dbContext.Exercises.Remove(exercise);
+
+            await dbContext.SaveChangesAsync();
+            return TypedResults.Ok();
         }
 
         internal async Task<IResult> DeleteAdmin (int id) {
             _logger.LogInformation("admin delete");
-            Admin? admin = await dbContext.Admins
+            Admin? admin = await dbContext.Admins.Where(a => a.Id == id)
                 .FirstOrDefaultAsync();
             if (admin is null) {
                 _logger.LogInformation("admin not found");
                 return TypedResults.NotFound($"Admin с ID = {id} не найден");
             }
-            return TypedResults.Ok(dbContext.Admins.Remove(admin));
+            dbContext.Admins.Remove(admin);
+
+            await dbContext.SaveChangesAsync();
+            return TypedResults.Ok();
         }
         #endregion
     }

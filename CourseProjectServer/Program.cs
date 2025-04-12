@@ -66,6 +66,11 @@ namespace CourseProjectServer {
                 endpoints.MapGet("/api/workout/{id:int}", (EntetiesController controller, int id) =>
                     controller.GetWorkout(id));
 
+                endpoints.MapGet("/api/exercise/all", (EntetiesController controller) =>
+                    controller.GetAllExercises());
+                endpoints.MapGet("/api/exercise/{id:int}", (EntetiesController controller, int id) =>
+                    controller.GetExercise(id));
+
                 endpoints.MapGet("/api/exerciseraw/all", (EntetiesController controller) =>
                     controller.GetAllExerciseRaws());
                 endpoints.MapGet("/api/exerciseraw/{id:int}", (EntetiesController controller, int id) =>
