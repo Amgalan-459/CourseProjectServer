@@ -14,7 +14,7 @@ namespace CourseProjectServer {
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder => {
                     webBuilder.UseKestrel();
-                    webBuilder.UseUrls("http://192.168.1.72:5000/");
+                    webBuilder.UseUrls("http://192.168.1.64:5000/");
                     webBuilder.UseStartup<Startup>();
                 });
     }
@@ -70,6 +70,11 @@ namespace CourseProjectServer {
                     controller.GetAllExerciseRaws());
                 endpoints.MapGet("/api/exerciseraw/{id:int}", (EntetiesController controller, int id) =>
                     controller.GetExerciseRaw(id));
+
+                endpoints.MapGet("/api/admin/all", (EntetiesController controller) =>
+                    controller.GetAllAdminss());
+                endpoints.MapGet("/api/admin/{id:int}", (EntetiesController controller, int id) =>
+                    controller.GetAdmin(id));
                 #endregion
 
 
@@ -85,9 +90,22 @@ namespace CourseProjectServer {
                 endpoints.MapPost("/api/workout",
                     (EntetiesController controller, [FromBody] Workout workout) =>
                         controller.AddWorkout(workout));
+
+                endpoints.MapPost("/api/exercise",
+                    (EntetiesController controller, [FromBody] Exercise exercise) =>
+                        controller.AddExercise(exercise));
+
+                endpoints.MapPost("/api/exerciseraw",
+                    (EntetiesController controller, [FromBody] ExerciseRaw exerciseRaw) =>
+                        controller.AddExerciseRaw(exerciseRaw));
+
+                endpoints.MapPost("/api/admin",
+                    (EntetiesController controller, [FromBody] Admin admin) =>
+                        controller.AddAdmin(admin));
                 #endregion
 
 
+                //delete не пользуемся, а меняем в юзере или админе настройку IsActive. Delete в основном только к exercise
                 #region MapDelete
                 endpoints.MapDelete("/api/trainee/{id:int}",
                     (EntetiesController controller, int id) => controller.DeleteTrainee(id));
@@ -97,6 +115,15 @@ namespace CourseProjectServer {
 
                 endpoints.MapDelete("/api/workout/{id:int}",
                     (EntetiesController controller, int id) => controller.DeleteWorkout(id));
+
+                endpoints.MapDelete("/api/exercise/{id:int}",
+                    (EntetiesController controller, int id) => controller.DeleteExercise(id));
+
+                endpoints.MapDelete("/api/exerciseraw/{id:int}",
+                    (EntetiesController controller, int id) => controller.DeleteExerciseRaw(id));
+
+                endpoints.MapDelete("/api/admin/{id:int}",
+                    (EntetiesController controller, int id) => controller.DeleteAdmin(id));
                 #endregion
             });
         }

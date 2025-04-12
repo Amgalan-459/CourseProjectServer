@@ -47,6 +47,12 @@ namespace CourseProjectServer.Controllers { //потом добавить про
             return await dbContext.Exercises.ToArrayAsync();
         }
 
+        internal async Task<IEnumerable<Admin>> GetAllAdminss () {
+            _logger.LogInformation("admin get all");
+
+            return await dbContext.Admins.ToArrayAsync();
+        }
+
         internal async Task<Trainee> GetTrainee (int id) {
             _logger.LogInformation($"trainee get {id}");
 
@@ -70,10 +76,17 @@ namespace CourseProjectServer.Controllers { //потом добавить про
 
             return await dbContext.ExerciseRaws.Where(t => t.Id == id).FirstOrDefaultAsync();
         }
+
         internal async Task<Exercise> GetExercise (int id) {
             _logger.LogInformation($"exercise get {id}");
 
             return await dbContext.Exercises.Where(t => t.Id == id).FirstOrDefaultAsync();
+        }
+
+        internal async Task<Admin> GetAdmin (int id) {
+            _logger.LogInformation($"admin get {id}");
+
+            return await dbContext.Admins.Where(t => t.Id == id).FirstOrDefaultAsync();
         }
         #endregion
 
@@ -148,6 +161,20 @@ namespace CourseProjectServer.Controllers { //потом добавить про
             await dbContext.SaveChangesAsync();
             return TypedResults.Ok(exercise);
         }
+
+        internal async Task<IResult> AddAdmin (Admin admin) {
+            _logger.LogInformation("admin post");
+
+            if (dbContext.Admins.Contains(admin)) {
+                dbContext.Admins.Update(admin);
+            }
+            else {
+                await dbContext.Admins.AddAsync(admin);
+            }
+
+            await dbContext.SaveChangesAsync();
+            return TypedResults.Ok(admin);
+        }
         #endregion
 
 
@@ -205,6 +232,17 @@ namespace CourseProjectServer.Controllers { //потом добавить про
                 return TypedResults.NotFound($"Exercise с ID = {id} не найден");
             }
             return TypedResults.Ok(dbContext.Exercises.Remove(exercise));
+        }
+
+        internal async Task<IResult> DeleteAdmin (int id) {
+            _logger.LogInformation("admin delete");
+            Admin? admin = await dbContext.Admins
+                .FirstOrDefaultAsync();
+            if (admin is null) {
+                _logger.LogInformation("admin not found");
+                return TypedResults.NotFound($"Admin с ID = {id} не найден");
+            }
+            return TypedResults.Ok(dbContext.Admins.Remove(admin));
         }
         #endregion
     }
