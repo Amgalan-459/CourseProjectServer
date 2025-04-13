@@ -107,6 +107,10 @@ namespace CourseProjectServer {
                 endpoints.MapPost("/api/admin",
                     (EntetiesController controller, [FromBody] Admin admin) =>
                         controller.AddAdmin(admin));
+
+                endpoints.MapPost("/api/forgetpassword/{email}",
+                    (EntetiesController controller, string email) =>
+                        controller.ForgetPasswordT(email));
                 #endregion
 
 

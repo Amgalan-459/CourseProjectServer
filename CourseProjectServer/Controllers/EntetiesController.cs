@@ -3,6 +3,8 @@ using CourseProjectServer.Data.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Net.Mail;
+using System.Net;
 
 namespace CourseProjectServer.Controllers { //потом добавить проверку по jwt токену, а потм и на posgtresql
     public class EntetiesController : Controller {
@@ -15,7 +17,6 @@ namespace CourseProjectServer.Controllers { //потом добавить про
         }
 
 
-        //дописать Exercise, ExerciseRaw
         #region Get
         internal async Task<IEnumerable<Trainee>> GetAllTrainees () {
             _logger.LogInformation("trainee get all");
@@ -175,6 +176,29 @@ namespace CourseProjectServer.Controllers { //потом добавить про
             await dbContext.SaveChangesAsync();
             return TypedResults.Ok(admin);
         }
+
+        internal async Task<IResult> ForgetPasswordT(string email) {
+            User? user = await dbContext.Trainees.FirstOrDefaultAsync(t => t.Email.Equals(email));
+
+            if (user is null) {
+                user = await dbContext.Trainers.FirstOrDefaultAsync(t => t.Email.Equals(email));
+                if (user is null)
+                {
+                    _logger.LogInformation("user is not found");
+                    return TypedResults.NotFound("Пользователь не найден");
+                }                
+            }
+
+            int code = await SendCode(email);
+
+            if (code == 0) {
+                _logger.LogError("Unable to send mail");
+                return TypedResults.Problem("email is not available");
+            }
+
+            _logger.LogInformation("mail sended");
+            return TypedResults.Ok(code);
+        }
         #endregion
 
 
@@ -261,6 +285,40 @@ namespace CourseProjectServer.Controllers { //потом добавить про
 
             await dbContext.SaveChangesAsync();
             return TypedResults.Ok();
+        }
+        #endregion
+
+        #region HelpMethods
+        private async Task<int> SendCode (string email) {
+            try {
+                Random rnd = new();
+
+                MailAddress from = new MailAddress("p_recovery@inbox.ru");
+                MailAddress to = new MailAddress(email);
+
+                MailMessage message = new(from, to);
+                string code = "";
+                for (int i = 0; i < 6; i++) {
+                    code += rnd.Next(0, 9);
+                }
+
+                message.Subject = "Подтвердите вашу почту";
+
+                message.IsBodyHtml = true;
+
+                using SmtpClient smtpClient = new SmtpClient("smtp.mail.ru", 587);
+                smtpClient.Credentials = new NetworkCredential("p_recovery@inbox.ru", "g56ZgHrHERyVmG717v37"); //ошибка в пароле
+                smtpClient.EnableSsl = true;
+                message.Body = $@"<h1>Код: {code}</h1>";
+
+                await smtpClient.SendMailAsync(message);
+
+                return int.Parse(code);
+            }
+            catch(Exception ex) {
+                _logger.LogError($"Unable to send message \n{ex}");
+                return 0;
+            }
         }
         #endregion
     }
