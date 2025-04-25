@@ -89,6 +89,35 @@ namespace CourseProjectServer.Controllers { //потом добавить про
 
             return await dbContext.Admins.Where(t => t.Id == id).FirstOrDefaultAsync();
         }
+
+        internal async Task<IEnumerable<Workout>> GetWorkoutsByTraineeId (int id) {
+            _logger.LogInformation($"workouts by trainee id: {id}");
+
+            return await dbContext.Workouts.Where(w => w.TraineeId == id).ToArrayAsync();
+        }
+
+        internal async Task<IEnumerable<Exercise>> GetExerciseByWorkoutId (int id) {
+            _logger.LogInformation($"exercise by trainee id: {id}");
+
+            return await dbContext.Exercises.Where(e => e.WorkoutId == id).ToArrayAsync();
+        }
+
+        internal async Task<IEnumerable<Trainee>> GetTraineesByTrainerId (int id) {
+            _logger.LogInformation($"trinee by trainer id: {id}");
+
+            return await dbContext.Trainees.Where(t => t.TrainerId == id).ToArrayAsync();
+        }
+
+        internal async Task<Trainee?> GetTraineeByEmail (string email) {
+            _logger.LogInformation($"trainee get by email {email}");
+
+            return await dbContext.Trainees.FirstOrDefaultAsync(t => t.Email.Equals(email));
+        }
+        internal async Task<Trainer?> GetTrainerByEmail (string email) {
+            _logger.LogInformation($"trainer get by email {email}");
+
+            return await dbContext.Trainers.FirstOrDefaultAsync(t => t.Email.Equals(email));
+        }
         #endregion
 
 
@@ -307,7 +336,7 @@ namespace CourseProjectServer.Controllers { //потом добавить про
                 message.IsBodyHtml = true;
 
                 using SmtpClient smtpClient = new SmtpClient("smtp.mail.ru", 587);
-                smtpClient.Credentials = new NetworkCredential("p_recovery@inbox.ru", "g56ZgHrHERyVmG717v37"); //ошибка в пароле
+                smtpClient.Credentials = new NetworkCredential("p_recovery@inbox.ru", "yBkdyDYRmrBd3Bzb3D5z"); //ошибка в пароле
                 smtpClient.EnableSsl = true;
                 message.Body = $@"<h1>Код: {code}</h1>";
 

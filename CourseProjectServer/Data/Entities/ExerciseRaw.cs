@@ -2,7 +2,7 @@
 
 namespace CourseProjectServer.Data.Entities {
     public class ExerciseRaw {
-        [Key] public int Id { get; set; }
+        [Key] public int Id { get; set; }//добавить потом сюда группу мышц
         [Required] public string Name { get; set; }
         [Required] public string ExerciseUrl { get; set; }
 

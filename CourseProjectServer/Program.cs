@@ -28,6 +28,8 @@ namespace CourseProjectServer {
             services.AddDbContext<CourseDbContext>();
 
             services.AddCors();
+
+            
         }
 
         public void Configure (IApplicationBuilder app, IWebHostEnvironment env) {
@@ -54,22 +56,32 @@ namespace CourseProjectServer {
                     controller.GetAllTrainees());
                 endpoints.MapGet("/api/trainee/{id:int}", (EntetiesController controller, int id) =>
                     controller.GetTrainee(id));
+                endpoints.MapGet("/api/trainee/{email}", (EntetiesController controller, string email) =>
+                    controller.GetTraineeByEmail(email));
+                endpoints.MapGet("/api/trainee/trainer/{id:int}", (EntetiesController controller, int id) =>
+                    controller.GetTraineesByTrainerId(id));
 
                 //потом смотрим от кого. Если от тренера или админа - пароль надо, а если нет, то нет
                 endpoints.MapGet("/api/trainer/all", (EntetiesController controller) =>
                     controller.GetAllTrainers());
                 endpoints.MapGet("/api/trainer/{id:int}", (EntetiesController controller, int id) =>
                     controller.GetTrainer(id));
+                endpoints.MapGet("/api/trainer/{email}", (EntetiesController controller, string email) =>
+                    controller.GetTrainerByEmail(email));
 
                 endpoints.MapGet("/api/workout/all", (EntetiesController controller) =>
                     controller.GetAllWorkouts());
                 endpoints.MapGet("/api/workout/{id:int}", (EntetiesController controller, int id) =>
                     controller.GetWorkout(id));
+                endpoints.MapGet("/api/workout/trainee/{id:int}", (EntetiesController controller, int id) =>
+                    controller.GetWorkoutsByTraineeId(id));
 
                 endpoints.MapGet("/api/exercise/all", (EntetiesController controller) =>
                     controller.GetAllExercises());
                 endpoints.MapGet("/api/exercise/{id:int}", (EntetiesController controller, int id) =>
                     controller.GetExercise(id));
+                endpoints.MapGet("/api/exercise/workout/{id:int}", (EntetiesController controller, int id) =>
+                    controller.GetExerciseByWorkoutId(id));
 
                 endpoints.MapGet("/api/exerciseraw/all", (EntetiesController controller) =>
                     controller.GetAllExerciseRaws());
@@ -107,7 +119,8 @@ namespace CourseProjectServer {
                 endpoints.MapPost("/api/admin",
                     (EntetiesController controller, [FromBody] Admin admin) =>
                         controller.AddAdmin(admin));
-
+                
+                //также для подтверждения email. Еще потом добавить в бд isEmailApproved
                 endpoints.MapPost("/api/forgetpassword/{email}",
                     (EntetiesController controller, string email) =>
                         controller.ForgetPasswordT(email));
